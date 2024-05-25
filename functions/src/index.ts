@@ -1,19 +1,25 @@
-/**
- * Import function triggers from their respective submodules:
- *
- * import {onCall} from "firebase-functions/v2/https";
- * import {onDocumentWritten} from "firebase-functions/v2/firestore";
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
- */
+// https://stackoverflow.com/questions/76434349/firebase-cloud-functions-v2-error-when-deploying
+import { setGlobalOptions } from "firebase-functions/v2/options";
+import { onRequest } from "firebase-functions/v1/https";
+setGlobalOptions({ maxInstances: 10 });
 
-import {onRequest} from "firebase-functions/v2/https";
-import * as logger from "firebase-functions/logger";
+import express = require("express");
 
-// Start writing functions
-// https://firebase.google.com/docs/functions/typescript
+import cors = require("cors");
 
-// export const helloWorld = onRequest((request, response) => {
-//   logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+
+import {
+  feeAggregatorHandler,
+  defaultFeeHandler
+} from './feeService'
+
+const app = express()
+app.disable('etag')
+
+app.use(express.json())
+app.use(cors())
+
+app.get('/v1/default/fee', defaultFeeHandler)
+app.get('/v1/agreggate/fees', feeAggregatorHandler)
+
+exports.app = onRequest(app)
