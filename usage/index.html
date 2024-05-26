@@ -13,7 +13,13 @@
 <body>
 
   <div>
-    <center>BGL dynamic fees</center>
+    <center>
+      <img src="./Icon.png" height="60" width="60" />
+    </center>
+
+    <center>
+      <h1>BGL Dynamic Fees</h1>
+    </center>
     <center>
       <canvas id="feeChart" style="width:100%;max-width:700px"></canvas>
     </center>
@@ -24,11 +30,13 @@
   </script>
 
   <script>
+
     renderFeeChart()
+
     async function renderFeeChart() {
       const data = await fetch('https://us-central1-bitgesellfees.cloudfunctions.net/app/v1/agreggate/fees')
       const fees = await data.json()
-      console.log(fee)
+      console.log(fees)
       const xValues = ["Minimum Fee", "Good", "Best"];
       const yValues = [fees.min_fee, fees.good, fees.best];
       const barColors = ["red", "green", "orange"]

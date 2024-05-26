@@ -8,6 +8,8 @@ A simple service that gives best, good fees for  transactions. Note: Transaction
 
 Read more About Transactions, UTXO model: [UTXO Guide ](https://community.magiceden.io/learn/utxo-guide)
 
+Note: This is highly experimental and improvements are highly welcome.
+
 ## Usage
 
 ```bash
@@ -34,6 +36,8 @@ curl https://us-central1-bitgesellfees.cloudfunctions.net/app/v1/agreggate/fees
     "good": 0.0099125
 }
 ```
+
+A sample usage: 
 
 ## DEFAULT_MIN fees
 
