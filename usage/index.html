@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fees</title>
+</head>
+<style>
+
+</style>
+
+<body>
+
+  <div>
+    <center>BGL dynamic fees</center>
+    <center>
+      <canvas id="feeChart" style="width:100%;max-width:700px"></canvas>
+    </center>
+
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
+  </script>
+
+  <script>
+    renderFeeChart()
+    async function renderFeeChart() {
+      const data = await fetch('https://us-central1-bitgesellfees.cloudfunctions.net/app/v1/agreggate/fees')
+      const fees = await data.json()
+      console.log(fee)
+      const xValues = ["Minimum Fee", "Good", "Best"];
+      const yValues = [fees.min_fee, fees.good, fees.best];
+      const barColors = ["red", "green", "orange"]
+
+      const myChart = new Chart("feeChart", {
+        type: "bar",
+        data: {
+          labels: xValues,
+          datasets: [{
+            backgroundColor: barColors,
+            data: yValues
+          }]
+        },
+        options: {}
+      });
+
+    }
+  </script>
+</body>
+
+</html>
