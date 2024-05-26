@@ -7,10 +7,9 @@ import {
 import bglunits = require('bgl-units')
 import mathjs = require('mathjs')
 
-import { BitgesellBlockchainSDK } from "bitgesell-blockchain-sdk";
-import { BlockStats } from "bitgesell-blockchain-sdk/build/main/types";
+import axios from "axios";
 
-const DEFAULT_MIN_FEE = bglunits.toBGL(10000) // proposed fee of 10000 statoshis = 0.0001 BGL
+const DEFAULT_MIN_FEE = bglunits.toBGL(10000) // proposed fee of 10,000 statoshis = 0.0001 BGL
 const API_VERSION = 0.1
 
 const defaultFeeHandler = (
@@ -29,36 +28,40 @@ const feeAggregatorHandler = async (
   res: Response
 ) => {
   // @ts-ignore
-  const { best_average, good } = await aggregateBlockFees(res)
+  const { good_median, best_average } = await aggregateBlockFees(res)
+  const best = bglunits.toBGL(mathjs.ceil(best_average))
+  const good = bglunits.toBGL(mathjs.ceil(good_median))
+
   return res.json({
     v1: API_VERSION,
     min_fee: DEFAULT_MIN_FEE,
-    best: best_average,
-    good: good
+    best: best,
+    good: good,
   })
 }
 
 async function aggregateBlockFees(res: Response) {
-  const sdkInstance = new BitgesellBlockchainSDK({
-    baseAPIURL: 'https://api.bitaps.com/bgl/v1/blockchain'
-  })
-
 
   try {
 
-    const blockDataTwelveHours: Array<BlockStats> = await sdkInstance.blockchain.getBlockDataLastNHours(12)
 
-    let best_average = 0, good = 0
+    const response = await axios.get('https://api.bitaps.com/bgl/v1/blockchain/mempool/transactions');
+    const mempoolTxes = response.data.data.list
 
-    blockDataTwelveHours.forEach(blockData => {
-      best_average += blockData.miner ? mathjs.mean(Number(blockData.miner)) : DEFAULT_MIN_FEE * 0.6
-      good += blockData.miner ? mathjs.median(Number(blockData.miner)) : DEFAULT_MIN_FEE * 0.4
+    let fees: Array<number> = []
+    // @ts-ignore
+    mempoolTxes.forEach(tx => {
+      // @ts-ignore
+      fees.push(tx.fee)
     })
+
+    const best_average = mathjs.mean(fees)
+    const good_median = mathjs.median(fees)
+
     return {
       best_average,
-      good
+      good_median
     }
-
   } catch (error) {
     return res.json({ error: `${error}` })
   }
