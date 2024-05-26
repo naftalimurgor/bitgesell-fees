@@ -39,5 +39,12 @@ curl https://us-central1-bitgesellfees.cloudfunctions.net/app/v1/agreggate/fees
 
 Bitgesell follows the Bitcoin transaction model which uses a proposed minimum fee of `10,000 satoshis`, this is equivalent to `0.0001 BGL`
 
+## Usage
+For usage, see `usage/` for a visualized graph
+
+## Contribution
+
+All contributions are highly welcome!
+
 ## LICENSE
 `MIT`
