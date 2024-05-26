@@ -6,7 +6,7 @@
 
 A simple service that gives best, good fees for  transactions. Note: Transaction fees may vary a lot for a UTXO based model. A UTXO is a collection of small unpsent transaction outputs spread across multiple transactions.
 
-Read more About Transactions, UTXO model:
+Read more About Transactions, UTXO model: [UTXO Guide ](https://community.magiceden.io/learn/utxo-guide)
 
 ## Usage
 
@@ -30,8 +30,8 @@ curl https://us-central1-bitgesellfees.cloudfunctions.net/app/v1/agreggate/fees
 {
     "v1": 0.1,
     "min_fee": 0.0001,
-    "best": 0.004200000000000005,
-    "good": 0.0028000000000000047
+    "best": 0.00999465,
+    "good": 0.0099125
 }
 ```
 
